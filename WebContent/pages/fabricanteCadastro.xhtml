@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/templates/modeloGeral.xhtml">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:event listener="#{fabricanteBean.carregarCadastro}"
+				type="preRenderView" />
+			<f:viewParam name="fabAcao" value="#{fabricanteBean.acao}" />
+			<f:viewParam name="fabCodigo" value="#{fabricanteBean.codigo}" />
+		</f:metadata>
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="frmFabCad">
+			<p:toolbar>
+				<f:facet name="left">
+					<h:outputText value="Fabricantes" />
+				</f:facet>
+			</p:toolbar>
+			<h:panelGrid id="pnlFabCadDados" columns="2">
+				<p:outputLabel value="Código: " />
+				<p:inputText maxlength="10" size="8" readonly="true"
+					value="#{fabricanteBean.fabCadastro.codigo}" />
+
+				<p:outputLabel value="Descrição: " />
+				<p:inputText maxlength="50" size="30"
+					value="#{fabricanteBean.fabCadastro.descricao}" 
+					readonly="#{fabricanteBean.acao == 'Excluir'}">
+					<f:validateBean />
+				</p:inputText>
+			</h:panelGrid>
+			<h:panelGrid columns="5">
+				<p:commandButton value="Novo"
+					actionListener="#{fabricanteBean.novo}"
+					update=":frmFabCad:pnlFabCadDados" 
+					rendered="#{fabricanteBean.acao == 'Novo' and autenticacaoBean.funcionarioLogado.funcao != 'Balconista'}"/>
+
+				<p:commandButton value="Salvar"
+					actionListener="#{fabricanteBean.salvar}"
+					update=":msgGlobal :frmFabCad:pnlFabCadDados" 
+					rendered="#{fabricanteBean.acao == 'Novo' and autenticacaoBean.funcionarioLogado.funcao != 'Balconista'}"/>
+
+				<p:commandButton value="Editar"
+					actionListener="#{fabricanteBean.editar}" update=":msgGlobal"
+					rendered="#{fabricanteBean.acao == 'Editar' and autenticacaoBean.funcionarioLogado.funcao != 'Balconista'}"/>
+
+				<p:commandButton value="Excluir"
+					actionListener="#{fabricanteBean.excluir}" update=":msgGlobal" 
+					rendered="#{fabricanteBean.acao == 'Excluir' and autenticacaoBean.funcionarioLogado.funcao != 'Balconista'}"/>
+
+				<p:button value="Voltar"
+					outcome="/pages/fabricantePesquisa.xhtml?faces-redirect=true" />
+			</h:panelGrid>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
